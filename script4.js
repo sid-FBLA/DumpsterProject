@@ -1,4 +1,7 @@
 // Define the cost function
+
+let fixed_area = 72 * Math.sqrt(15 ** 2 + 12 ** 2);
+
 function cost(x, y, z) {
   const b = 72 * Math.sqrt(15 ** 2 + 12 ** 2) / (x - 9 ** 2);
   const c = 72 * Math.sqrt(15 ** 2 + 12 ** 2) / x;
