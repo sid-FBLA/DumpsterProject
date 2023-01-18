@@ -1,3 +1,7 @@
+//Initiate mathJS library
+const math = require('mathjs');
+
+/*
 // Define the cost function
 function cost(x, y, z) {
   const b = 72 * Math.sqrt(15 ** 2 + 12 ** 2) / (x - 9 ** 2);
@@ -39,12 +43,48 @@ function dConstraint_dx(x, y, z) {
 function dConstraint_dy(x, y, z) {
   return z;
 }
+*/
 
 // Take the partial derivative of the constraint function with respect to z
-function dConstraint_dz(x, y, z) {
-const b = 72 * Math.sqrt(15 ** 2 + 12 ** 2) / (x - 9 ** 2);
-return y - b + (0.7 + 1) * b / 2;
+const scipy = require('scipy');
+
+function F(X) {
+    let x = X[0], y = X[1], z = X[2];
+    let b = 72 * Math.sqrt(15 ** 2 + 12 ** 2) / (x - 9 ** 2);
+    let c = 72 * Math.sqrt(15 ** 2 + 12 ** 2) / x;
+    return (0.7 / 144) * (2 * ((z * (y - b)) + (b * (0.7 * z + z)) / 2) + (x - 2 * 0.1046) * (0.7 * z + (72 * Math.sqrt(15 ** 2 + 12 ** 2)) / x) + (x - 2 * 0.1046) * z) + (0.9 / 144) * ((x - 2 * 0.1046) * (y - 2 * 0.1046)) + (0.18 / 6) * (c + 0.7 * z) + (0.18 / 6) * (z) + (0.18 / 6) * (y - 2 * 0.1046 + x - 2 * 0.1046) + 50;
 }
+
+function constraint(X) {
+    let x = X[0], y = X[1], z = X[2];
+    let b = 72 * Math.sqrt(15 ** 2 + 12 ** 2) / (x - 9 ** 2);
+    return (z * (y - b) + ((0.7 * z + z) * b) / 2) * x - 202320;
+}
+
+let initial_guess = [72, 58, 50];
+
+let constraints = {
+    type: "eq",
+    fun: constraint
+};
+
+let solution = scipy.optimize.minimize(F, initial_guess, {
+    constraints: [constraint],
+});
+console.log(solution);
+
+
+
+
+
+
+/*
+//Previous code
+const equationdx = '(0.7 / 144) * (2 * (0.7 * z + (72 * Math.sqrt(15 ** 2 + 12 ** 2) / x)) + z - (2 * 0.1046)) + (0.9 / 144) * (y - 2 * 0.1046) - (0.18 / 6) * (72 * Math.sqrt(15 ** 2 + 12 ** 2) / (x ** 2)) = λ * (z * (y - b) + ((0.7 * z + z) * b) / 2)';
+const equationdy = '(0.7 / 144) * (2 * z * (1 - b)) + (0.9 / 144) * (x - 2 * 0.1046) - (0.18 / 6) = λ * z'
+const equationdz = '(0.7 / 144) * (2 * ((y - b) + (0.7 + 1) * b / 2) + (x - 2 * 0.1046) * (0.7 + (72 * Math.sqrt(15 ** 2 + 12 ** 2) / x)) + (x - 2 * 0.1046)) + (0.18 / 6) * (0.7 + 1) = λ * (y - b + (0.7 + 1) * b / 2)'
+const lambda = math.solve(equation, 'λ');
+console.log(lambda);
 
 // Set the partial derivatives of the cost and constraint functions equal to zero
 let x = 0;
@@ -103,3 +143,4 @@ if (detH > 0) {
 }
 
 console.log("Minimum cost: ", cost(x, y, z));
+*/
