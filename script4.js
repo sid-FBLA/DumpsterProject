@@ -43,7 +43,7 @@ function dConstraint_dx(x, y, z) {
 function dConstraint_dy(x, y, z) {
   return z;
 }
-*/
+
 
 // Take the partial derivative of the constraint function with respect to z
 const scipy = require('scipy');
@@ -63,7 +63,7 @@ function constraint(X) {
 
 let initial_guess = [72, 58, 50];
 
-let constraints = {
+let constraint = {
     type: "eq",
     fun: constraint
 };
